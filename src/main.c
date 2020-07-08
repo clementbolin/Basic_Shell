@@ -1,22 +1,31 @@
 /*
-** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** EPITECH PROJECT, 2020
+** main
 ** File description:
-** main.c
+** main
 */
 
 #include "mysh.h"
 
 int main(int ac, char **av, char **env)
 {
-    char *str = my_getenv("PATH", env);
-    link_t *link = init_list();
-    link_t *env_link = init_list();
+    shell_t shell;
 
-    if (str == NULL)
-        return (84);
-    pars_path(link, str);
-    create_new_env(env, env_link);
-    prompt(env, link, env_link);
+    shell.env = init_list();
+    shell.path = init_list();
+    shell.error = 0;
+    shell.etat_fork = 0;
+    shell.etat = 0;
+    shell.i = 0;
+    if (ac != 1) {
+        if (ac == 2 && my_strcmp(av[1], "--debug") == 0)
+            shell.debug = 1;
+        else
+            return (84);
+    }
+    init_env(env, shell.env);
+    init_link_path(shell.env, shell.path);
+    prompt(&shell);
     return (0);
 }
+

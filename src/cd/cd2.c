@@ -18,3 +18,12 @@ int basic_cd(char *path, char *buffer, char *oldpwd, link_t *env_link)
     }
     return (0);
 }
+
+void check_cd(shell_t *shell)
+{
+    if (size_tab(shell->command) < 3) {
+        if (shell->debug == 1)
+            my_printf("use this cd\n");
+        cd(shell->env, shell->command[1]);
+    }
+}

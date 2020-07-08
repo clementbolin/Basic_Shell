@@ -1,13 +1,13 @@
 /*
-** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** EPITECH PROJECT, 2020
+** link path execve
 ** File description:
-** link.c
+** link_path
 */
 
 #include "mysh.h"
 
-node_t *create_node(char *path)
+node_t *create_node_path(char *path)
 {
     node_t *new_node = malloc(sizeof(*new_node));
 
@@ -18,57 +18,27 @@ node_t *create_node(char *path)
     return (new_node);
 }
 
-link_t *init_list(void)
+void add_node_path(char *path, link_t *link)
 {
-    link_t *link = malloc(sizeof(link));
+    node_t *current = NULL;
 
-    if (!link)
-        return (NULL);
-    link->head = NULL;
-    return (link);
+    if (link->head == NULL)
+        link->head = create_node_path(path);
+    else {
+        current = link->head;
+        while (current->next != NULL)
+            current = current->next;
+        current->next = create_node_path(path);
+    }
 }
 
-void display_link(link_t *link)
+void display_link_path(link_t *link)
 {
     node_t *current = link->head;
 
     if (link->head == NULL)
         return;
     for (; current != NULL; current = current->next)
-        my_printf("%s-> ", current->path);
+        my_printf("%s:", current->path);
     my_printf("NULL\n");
-}
-
-void add_node(char *path, link_t *link)
-{
-    node_t *current = NULL;
-
-    if (link->head == NULL)
-        link->head = create_node(path);
-    else {
-        current = link->head;
-        while (current->next != NULL)
-            current = current->next;
-        current->next = create_node(path);
-    }
-}
-
-void delete_node(int size, link_t *link)
-{
-    node_t *current = link->head;
-    node_t *prev = current;
-    int i = 0;
-
-    while (current != NULL) {
-        if (i == size) {
-            prev->next = current->next;
-            if (current == link->head)
-                link->head = current->next;
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-        i += 1;
-    }
 }

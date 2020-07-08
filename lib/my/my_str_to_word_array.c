@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2019
-** PSU_my_exec_2019
+** EPITECH PROJECT, 2020
+** lib
 ** File description:
-** my_str_to_word_array.c
+** str to word array
 */
 
 #include <stdlib.h>

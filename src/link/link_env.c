@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** EPITECH PROJECT, 2020
+** minishell2
 ** File description:
-** link_env.c
+** link env
 */
 
 #include "mysh.h"
@@ -40,25 +40,5 @@ void add_node_env(char *path, link_t *link, char *name)
         while (current->next != NULL)
             current = current->next;
         current->next = create_node_env(path, name);
-    }
-}
-
-void delete_node_env(int size, link_t *link)
-{
-    node_t *current = link->head;
-    node_t *prev = current;
-    int i = 0;
-
-    while (current != NULL) {
-        if (i == size) {
-            prev->next = current->next;
-            if (current == link->head)
-                link->head = current->next;
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-        i += 1;
     }
 }

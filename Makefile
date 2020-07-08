@@ -6,48 +6,64 @@
 ##
 
 SRC		= 		./src/main.c 							\
-				./src/env.c 							\
-				./src/link/link_path.c 					\
+				./src/link/basic_link.c 				\
 				./src/link/link_env.c 					\
-				./src/prompt.c 							\
+				./src/link/link_path.c 					\
+				./src/init/init_env.c 					\
+				./src/init/init_path_link.c 			\
 				./src/tool.c 							\
-				./src/setenv.c 							\
+				./src/prompt/prompt.c 					\
+				./src/prompt/command.c 					\
+				./src/env/setenv.c 						\
+				./src/env/unsetenv.c 					\
+				./src/link/binary_tree.c 				\
 				./src/cd/cd.c 							\
-				./src/my_bin.c 							\
-				./src/tool2.c 							\
 				./src/cd/cd2.c 							\
+				./src/env/tool_env.c					\
+				./src/is_alphanumeric.c 				\
+				./src/prompt/execute_binary.c 			\
+				./src/prompt/basic.c 					\
 
 OBJ		= $(SRC:.c=.o)
-
 CC 		= gcc
-
+CLANG	=
 RM		= rm -f
-
-NAME	=  mysh
-
+NAME	= mysh
 LIB		= make -C ./lib/my
-
 TEST 	= make -C ./tests
-
-CFLAGS	= -W -Wall -Wextra -g3 -I./include/
-
+CFLAGS	= -W -Wall -Wextra -g3 -Wno-deprecated -I./include/
 CSFML	= -lcsfml-graphics -lcsfml-audio -lcsfml-window -lcsfml-system
-
 LDFLAGS		=  -L. lib/libmy.a
 
-UNIT_FLAGS	=  --coverage -lcriterion ./lib/libmy.a
+### COLORS ###
+NOC			= \033[0m
+BOLD		= \033[1m
+UNDERLINE	= \033[4m
+BLACK		= \033[1;30m
+RED			= \033[1;31m
+GREEN		= \033[1;32m
+YELLOW		= \033[1;33m
+BLUE		= \033[1;34m
+VIOLET		= \033[1;35m
+CYAN		= \033[1;36m
+WHITE		= \033[1;37m
 
-all: 		start $(NAME) end
+all: 		start $(NAME)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo "$(BLUE)Creating object file -> $(WHITE)$(notdir $@)... $(RED)[Done]"
 
 $(NAME):	$(OBJ)
+		@echo "$(BOLD)Creating LIB $(GREEN)[IN PROGRESS]"
 			$(LIB)
-		$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+		@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS) -lncurses
+		@echo "$(GREEN)[$(NAME)] was successfully created$(NOC)"
+		make clean
 
-tests_run:
-	$(LIB)
-	gcc -o unit $(FILE_T) $(SRC_TEST) $(UNIT_FLAGS) $(CFLAGS)
-	./unit
-	gcovr -r . --branches; lcov --capture --directory  ./ --output-file covActi.info --rc lcov_branch_coverage=1 --exclude ./unit
+test_run:
+			$(TEST)
+		./tests/unit_tests
 
 retest:
 	$(TEST) re
@@ -61,8 +77,6 @@ clean:
 fclean: clean
 		$(RM) $(NAME)
 		$(LIB) fclean
-		@find -type f -name '*.gcda' -delete
-		@find -type f -name '*.gcno' -delete
 		@echo "\033[5m\033[3m\033[33mEtat for -> $(NAME) -> fclean -> OK\033[0m"
 
 end:

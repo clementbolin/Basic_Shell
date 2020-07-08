@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2019
-** PSU_minishell1_2019
+** EPITECH PROJECT, 2020
+** minishell2
 ** File description:
-** setenv.c
+** setenv
 */
 
 #include "mysh.h"
@@ -63,18 +63,27 @@ void my_setenv(char *name, char const *value, link_t *link_env)
     node->path = my_strcpy(node->path, path);
 }
 
-void my_unsetenv(char **name, link_t *link_env)
+void check_setenv(shell_t *shell)
 {
-    int i = 0;
-    node_t *node = link_env->head;
-
-    for (int j = 1; name[j] != NULL; j++) {
-        node = link_env->head;
-        while (node != NULL) {
-            if (my_strcmp(node->name, name[j]) == 0)
-                delete_node_env(i, link_env);
-            i += 1;
-            node = node->next;
-        }
+    if (size_tab(shell->command) == 1) {
+        display_link_env(shell->env);
+        return;
     }
+    if (size_tab(shell->command) > 3)
+        my_putstr("setenv: Too many arguments.\n");
+    else {
+        for (int i = 1; shell->command[i]; i++) {
+            if (is_alphanumeric(shell->command[i]) == -1) {
+                my_printf("setenv: Variable name must contain ");
+                my_printf("alphanumeric characters.\n");
+                return;
+            }
+        }
+        my_setenv(shell->command[1], shell->command[2], shell->env);
+    }
+}
+
+void env(shell_t *shell)
+{
+    display_link_env(shell->env);
 }
